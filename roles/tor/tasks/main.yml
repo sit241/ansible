@@ -1,0 +1,33 @@
+# roles/tor/tasks/main.yml
+- name: Установить Tor
+  ansible.builtin.apt:
+    name: tor
+    state: present
+    update_cache: true
+
+- name: Установить obfs4proxy
+  become: true
+  ansible.builtin.apt:
+    name: obfs4proxy
+    state: present
+    update_cache: true
+
+- name: Разместить torrc (с мостами)
+  ansible.builtin.template:
+    src: torrc.j2
+    dest: /etc/tor/torrc
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Включить instance tor@default
+  ansible.builtin.systemd:
+    name: tor@default
+    enabled: true
+    state: started
+
+- name: Перезапустить tor@default
+  become: true
+  ansible.builtin.systemd:
+    name: "tor@default"
+    state: restarted

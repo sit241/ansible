@@ -1,0 +1,18 @@
+# Меняй на 127.0.0.1, если не нужен внешний доступ
+SocksPort 0.0.0.0:9050
+
+# Ограничь доступ, если слушаешь наружу
+SocksPolicy accept 10.0.0.0/8
+SocksPolicy accept 192.168.0.0/16
+SocksPolicy reject *
+
+Log notice file /var/log/tor/notices.log
+
+# Мосты включены
+UseBridges 1
+ClientTransportPlugin obfs4 exec /usr/bin/obfs4proxy
+
+# Вставляем выданные Tor Project obfs4-строки:
+{% if tor_bridges is defined %}
+{{ tor_bridges }}
+{% endif %}
