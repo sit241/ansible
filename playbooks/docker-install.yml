@@ -6,12 +6,12 @@
 
   tasks:
     - name: Update APT cache
-      apt:
-        update_cache: yes
+      ansible.builtin.apt:
+        update_cache: true
       become: true
 
     - name: Install Docker dependencies
-      apt:
+      ansible.builtin.apt:
         name:
           - apt-transport-https
           - ca-certificates
@@ -21,30 +21,30 @@
       become: true
 
     - name: Add Docker GPG key
-      apt_key:
+      ansible.builtin.apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
         state: present
       become: true
 
     - name: Add Docker APT repository
-      apt_repository:
+      ansible.builtin.apt_repository:
         repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
         state: present
       become: true
 
     - name: Install Docker
-      apt:
+      ansible.builtin.apt:
         name: docker-ce
         state: present
       become: true
 
     - name: Ensure current user is in docker group
-      user:
+      ansible.builtin.user:
         name: root
         groups: docker
-        append: yes
+        append: true
       become: true
 
     - name: Install Docker Compose
-      shell: curl -fsSL https://github.com/docker/compose/releases/latest/download/docker-compose-Linux-x86_64 -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
+      ansible.builtin.shell: curl -fsSL https://github.com/docker/compose/releases/latest/download/docker-compose-Linux-x86_64 -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
       become: true
