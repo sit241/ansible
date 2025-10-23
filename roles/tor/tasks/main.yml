@@ -1,4 +1,6 @@
 # roles/tor/tasks/main.yml
+
+# sudo apt install -y tor
 - name: Установить Tor
   ansible.builtin.apt:
     name: tor

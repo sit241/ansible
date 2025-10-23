@@ -1,5 +1,5 @@
 - name: Install tor
-  hosts: myserver2
+  hosts: server_3
   become: true
   roles:
     - tor
