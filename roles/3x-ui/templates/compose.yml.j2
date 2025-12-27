@@ -1,0 +1,26 @@
+services:
+  3xui:
+    image: {{ xui_image }}
+    container_name: 3xui_app
+    # hostname: yourhostname <- optional
+    volumes:
+      - ./db:/etc/x-ui/
+      - ./cert:/root/cert/
+    environment:
+{% for key, value in xui_env.items() %}
+      {{ key }}: "{{ value }}"
+{% endfor %}
+    tty: true
+    network_mode: host
+    restart: unless-stopped
+
+  nginx:
+    image: {{ xui_nginx_image }}
+    container_name: 3xui_nginx
+    depends_on:
+      - 3xui
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./cert:/etc/nginx/ssl:ro
+    network_mode: host
+    restart: unless-stopped

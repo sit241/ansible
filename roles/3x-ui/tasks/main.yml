@@ -1,0 +1,55 @@
+---
+- name: Ensure 3x-ui directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  loop:
+    - "{{ xui_root }}"
+    - "{{ xui_root }}/db"
+    - "{{ xui_root }}/cert"
+    - "{{ xui_root }}/nginx"
+
+- name: Install TLS full chain certificate
+  ansible.builtin.copy:
+    src: "{{ xui_ssl_fullchain_src }}"
+    dest: "{{ xui_root }}/cert/fullchain.pem"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Install TLS private key
+  ansible.builtin.copy:
+    src: "{{ xui_ssl_privkey_src }}"
+    dest: "{{ xui_root }}/cert/privkey.pem"
+    owner: root
+    group: root
+    mode: "0600"
+
+- name: Render Nginx config for 3x-ui
+  ansible.builtin.template:
+    src: nginx.conf.j2
+    dest: "{{ xui_root }}/nginx/default.conf"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Render docker compose for 3x-ui
+  ansible.builtin.template:
+    src: compose.yml.j2
+    dest: "{{ xui_root }}/compose.yml"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Start 3x-ui stack
+  ansible.builtin.command:
+    cmd: docker compose down
+    chdir: "{{ xui_root }}"
+
+- name: Start 3x-ui stack
+  ansible.builtin.command:
+    cmd: docker compose up -d
+    chdir: "{{ xui_root }}"

@@ -1,0 +1,6 @@
+---
+- name: Deploy 3x-ui via Docker Compose
+  hosts: server_4
+  become: true
+  roles:
+    - "3x-ui"

@@ -1,0 +1,13 @@
+---
+xui_root: /srv/3x-ui
+xui_domain: npv.dev-pitr.ru
+xui_https_port: 1652
+xui_panel_port: 2053
+xui_sub_port: 2096
+xui_image: ghcr.io/mhsanaei/3x-ui:latest
+xui_nginx_image: nginx:1.25-alpine
+xui_env:
+  XRAY_VMESS_AEAD_FORCED: "false"
+  XUI_ENABLE_FAIL2BAN: "true"
+xui_ssl_fullchain_src: ssl/fullchain.pem
+xui_ssl_privkey_src: ssl/privkey.pem
