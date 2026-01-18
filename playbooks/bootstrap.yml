@@ -5,25 +5,5 @@
   gather_facts: false
   serial: 4
 
-  vars:
-    timezone: Europe/Moscow
-    # Определяем путь к known_hosts текущего пользователя контроллера
-    known_hosts_path: "{{ lookup('env','HOME') + '/.ssh/known_hosts' }}"
-
-  tasks:
-    - name: Remove old host key from known_hosts on controller
-      become: false
-      ansible.builtin.known_hosts:
-        path: "{{ known_hosts_path }}"
-        name: "{{ hostvars[inventory_hostname].ansible_host | default(inventory_hostname) }}"
-        state: absent
-      delegate_to: localhost
-
-    - name: Add currenthost key to known_hosts on controller
-      become: false
-      ansible.builtin.known_hosts:
-        path: "{{ known_hosts_path }}"
-        name: "{{ hostvars[inventory_hostname].ansible_host | default(inventory_hostname) }}"
-        key: "{{ lookup('pipe', 'ssh-keyscan -T 5 -t ed25519 ' ~ (hostvars[inventory_hostname].ansible_host | default(inventory_hostname))) }}"
-        state: present
-      delegate_to: localhost
+  roles:
+    - bootstrap

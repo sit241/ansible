@@ -1,0 +1,5 @@
+---
+# Default timezone for initial server setup; override per host if needed.
+timezone: Europe/Moscow
+# Path to the controller's known_hosts file.
+known_hosts_path: "{{ lookup('env','HOME') + '/.ssh/known_hosts' }}"

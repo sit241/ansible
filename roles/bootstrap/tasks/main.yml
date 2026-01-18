@@ -1,0 +1,17 @@
+---
+- name: Remove old host key from known_hosts on controller
+  become: false
+  ansible.builtin.known_hosts:
+    path: "{{ known_hosts_path }}"
+    name: "{{ hostvars[inventory_hostname].ansible_host | default(inventory_hostname) }}"
+    state: absent
+  delegate_to: localhost
+
+- name: Add current host key to known_hosts on controller
+  become: false
+  ansible.builtin.known_hosts:
+    path: "{{ known_hosts_path }}"
+    name: "{{ hostvars[inventory_hostname].ansible_host | default(inventory_hostname) }}"
+    key: "{{ lookup('pipe', 'ssh-keyscan -T 5 -t ed25519 ' ~ (hostvars[inventory_hostname].ansible_host | default(inventory_hostname))) }}"
+    state: present
+  delegate_to: localhost
